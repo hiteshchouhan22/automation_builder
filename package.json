@@ -6,6 +6,7 @@
     "_comment": "https only work on Admin privlages so have your VS on admin mode",
     "dev": "next dev --experimental-https",
     "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint"
   },

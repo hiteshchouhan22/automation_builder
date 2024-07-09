@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import * as LR from '@uploadcare/blocks'
 import { useRouter } from 'next/navigation'
 
@@ -15,9 +15,12 @@ const UploadCareButton = ({ onUpload }: Props) => {
     typeof LR.UploadCtxProvider.prototype & LR.UploadCtxProvider
   >(null)
 
+  // Memoize the onUpload function
+  const memoizedOnUpload = useCallback(onUpload, [onUpload])
+
   useEffect(() => {
     const handleUpload = async (e: any) => {
-      const file = await onUpload(e.detail.cdnUrl)
+      const file = await memoizedOnUpload(e.detail.cdnUrl)
       if (file) {
         router.refresh()
       }
@@ -32,8 +35,7 @@ const UploadCareButton = ({ onUpload }: Props) => {
         currentRef.removeEventListener('file-upload-success', handleUpload)
       }
     }
-  }, [])
-  
+  }, [memoizedOnUpload, router])
 
   return (
     <div>
